@@ -22,12 +22,13 @@ Puis
 ```bash
 nodemon server
 ```
+Qui lancera l'API su le port :3000
 
 frontend : 
 ```bash
 npm install
 ```
-Puis lancer la commande ```npm start``` qui devrait le lancer sur localhost:4200
+Puis lancer la commande ```npm start``` qui devrait le lancer sur ```localhost:4200```
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
