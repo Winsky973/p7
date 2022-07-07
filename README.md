@@ -13,8 +13,8 @@ Chacun peut rajouter un post liker le post le modifier le supprimer
 
 Use the package manager [npm](https://www.npmjs.com/) to install foobar.
 
-```bash
-pip install foobar
+bash
+npm install foobar
 ```
 
 ## Contributing
