@@ -11,11 +11,6 @@ Chacun peut rajouter un post liker le post le modifier le supprimer
 
 ## Installation
 
-Use the package manager [npm](https://www.npmjs.com/) to install foobar.
-
-bash
-npm install foobar
-```
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
