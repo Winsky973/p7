@@ -11,6 +11,17 @@ Chacun peut rajouter un post liker le post le modifier le supprimer
 
 ## Installation
 
+Use the package manager [npm](https://www.npmjs.com/) to install foobar.
+backend : 
+```bash
+npm install
+```
+
+frontend : 
+```bash
+npm install
+```
+Puis lancer la commande npm start qui devrait le lancer sur localhost:4200
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
