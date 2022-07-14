@@ -11,14 +11,14 @@ Chacun peut rajouter un post liker le post le modifier le supprimer
 
 ## Installation
 
-Use the package manager [npm](https://www.npmjs.com/) to install foobar.
+Utililisez le gestionnaire de paquets [npm](https://www.npmjs.com/) pour l'installation.
+
 backend : 
 rentrer dans le dossier backend entrez les commandes suivantes
 ```bash
 npm install
 ```
 Puis
-
 ```bash
 nodemon server
 ```

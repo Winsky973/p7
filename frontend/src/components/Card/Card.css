@@ -1,0 +1,46 @@
+.post {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    margin: 0 auto;
+    margin-bottom: 2rem;
+    width: 30em;
+    padding: 2.5rem;
+    background-color: rgb(255, 215, 215, 20%);
+}
+
+img {
+    object-fit: contain;
+    min-height: 100%;
+    max-width: 100%;
+}
+
+.post_user {
+    display: flex;
+    align-items: center;
+}
+
+.post-title,
+.post_user a {
+    font-weight: bold;
+}
+
+.post-like {
+    display: flex;
+    align-items: center;
+}
+
+input[type="text"] {
+    width: 20rem;
+    margin-left: 1rem;
+    border: .1rem solid hsla(10, 99%, 50%, 0.369);
+    border-radius: .3rem;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: rgb(255, 215, 215);
+    border-top: none;
+    border-right: none;
+    border-left: none;
+}
