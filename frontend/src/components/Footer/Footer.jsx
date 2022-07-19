@@ -1,11 +1,14 @@
-import React from 'react';
+import React from 'react'
+import './Footer.css'
 
 const Footer = () => {
-    return (
-        <div>
-            Footer de la page
-        </div>
-    );
-};
+   return (
+      <footer className="footer">
+         <div className="container-cpright">
+            <p>Copyright | 2022</p>
+         </div>
+      </footer>
+   )
+}
 
-export default Footer;
+export default Footer

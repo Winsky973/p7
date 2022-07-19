@@ -1,0 +1,13 @@
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    background-color: #FFD7D7;
+    height: 5rem;
+    color: #7e7e7e67;
+    margin-top: 2rem;
+}
+
+.container-cpright {
+    align-items: flex-end;
+}

@@ -1,42 +1,49 @@
 import React from 'react';
+import { useEffect, useState } from 'react'
 import Card from '../../components/Card/Card';
 import DefaultPicture from '../../assets/image.png'
 import Avatar from '../../assets/profile.svg'
- 
-const post = [
-    {
-        avatar : Avatar,
-        profileName: 'John Doe',
-        postTitle: 'Un animal posé OKLM dans la nature prêt à se faire shoot par un stupide humain ',
-        picture: DefaultPicture,
-        postDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Feugiat tristique habitant ac ultricies arcu arcu. Diam dolor quam felis, faucibus. Tellus a consectetur nunc, mattis. A aenean tristique at.'
-
-    },
-    {
-        avatar : Avatar,
-        profileName: 'Jane Doe',
-        postTitle: 'Un animal posé OKLM dans la nature prêt à se faire shoot par un stupide humain ',
-        picture: DefaultPicture,
-        postDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Feugiat tristique habitant ac ultricies arcu arcu. Diam dolor quam felis, faucibus. Tellus a consectetur nunc, mattis. A aenean tristique at.'
-
-    },
-    
-]
+import './Home.css'
 
 const Home = () => {
+
+    const [postData, setPostData] = useState()
+    const [isDataLoading, setDataLoading] = useState(true)
+
+    useEffect(() => {
+        async function fetchPost(){
+            try {
+                const response = await fetch(`http://localhost:3000/api/posts`)
+                const postData = await response.json()
+                setPostData(postData)
+            } catch (error) {
+                console.log(error)
+            }finally{
+                setDataLoading(false)
+            }
+        }
+        fetchPost()
+     }, [])
+
+     if(!isDataLoading){
+         console.log('postData : ', postData)
+         postData.map((res) => console.log(res))
+     }
+
     return (
         <div>
-        <h1>Accueil</h1>
-        {post.map((profile, index) => (
+        { !isDataLoading ? postData.map((post, index) => (
             <Card
-                key={`${profile.name}-${index}`}
-                avatar={profile.avatar}
-                title={profile.profileName}
-                label={profile.postTitle}
-                picture={profile.picture}
-                description={profile.postDescription}
+                key={`${post.name}-${index}`}
+                avatar={Avatar}
+                title={post.name}
+                label={post.postTitle}
+                picture={DefaultPicture}
+                description={post.description}
+                likes={post.likes}
             />
-        ))}
+        )) : null} 
+        <span className='bubble'></span>
     </div>
     );
 };

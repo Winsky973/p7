@@ -1,0 +1,6 @@
+.form-container {
+    display: grid;
+    justify-items: center;
+    justify-content: center;
+    grid-gap: 2rem;
+}

@@ -1,0 +1,20 @@
+.header-logo {
+    width: 15rem;
+}
+
+.navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navigation-liste {
+    display: flex;
+    justify-content: space-around;
+    list-style: none;
+    padding: 0;
+}
+
+.navigation-liste li {
+    padding: 0 1rem;
+}

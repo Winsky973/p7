@@ -91,6 +91,7 @@ exports.getAllPosts = (req, res, next) => {
         .catch(error => res.status(400).json({ error }));
 };
 
+
 /**Like a post */
 exports.likePost = (req, res, next) => {
     const likes = req.body.like;
