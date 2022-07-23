@@ -22,8 +22,7 @@ const Card = ({ label, picture, title, avatar, description, likes }) => {
       </div>
       <div className="post-like">
         <img src={heartLogo} alt={heartLogo} width="25" />
-        <span> {likes} </span>
-        <input type="text" placeholder="Commentaire" />
+        <span className="likes"> { likes } </span>
       </div>
     </article>
   );

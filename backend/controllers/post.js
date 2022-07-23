@@ -1,13 +1,12 @@
 const fs = require('fs');
-
 const Posts = require('../models/Posts');
 
 
 /**Create one */
 exports.createPost = (req, res, next) => {
-
+    console.log('req.file : ', req.file)
     const posts = new Posts({
-        ...JSON.parse(req.body.posts),
+        // ...JSON.parse(req.body),
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     });
     sauce.save()

@@ -21,6 +21,12 @@ const Header = () => {
             <li>
                <NavLink to="/signin">sign in</NavLink>
             </li>
+            <li>
+               <NavLink to="/create">Ajouter un post</NavLink>
+            </li>
+            <li>
+               <NavLink to="/">Log out</NavLink>
+            </li>            
          </ul>
       </nav>
    )

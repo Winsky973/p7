@@ -2,37 +2,20 @@ import React from 'react';
 import { useEffect, useState } from 'react'
 import Card from '../../components/Card/Card';
 import DefaultPicture from '../../assets/image.png'
+import { useFetch } from '../../utils/hooks';
 import Avatar from '../../assets/profile.svg'
 import './Home.css'
 
 const Home = () => {
 
-    const [postData, setPostData] = useState()
     const [isDataLoading, setDataLoading] = useState(true)
+    const { data, isLoading } = useFetch(`http://localhost:3000/api/posts`)
 
-    useEffect(() => {
-        async function fetchPost(){
-            try {
-                const response = await fetch(`http://localhost:3000/api/posts`)
-                const postData = await response.json()
-                setPostData(postData)
-            } catch (error) {
-                console.log(error)
-            }finally{
-                setDataLoading(false)
-            }
-        }
-        fetchPost()
-     }, [])
-
-     if(!isDataLoading){
-         console.log('postData : ', postData)
-         postData.map((res) => console.log(res))
-     }
+    const postsData  = useFetch(`http://localhost:3000/api/posts`)
 
     return (
         <div>
-        { !isDataLoading ? postData.map((post, index) => (
+        { postsData.isDataLoading === false ? postsData.data.map((post, index) => (
             <Card
                 key={`${post.name}-${index}`}
                 avatar={Avatar}
@@ -42,7 +25,7 @@ const Home = () => {
                 description={post.description}
                 likes={post.likes}
             />
-        )) : null} 
+        )) : <div>lol</div> } 
         <span className='bubble'></span>
     </div>
     );

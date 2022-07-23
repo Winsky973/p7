@@ -1,37 +1,60 @@
 import React from 'react'
 import './Signin.css'
 import logo from '../../assets/profile.svg'
-import { useState, useEffect } from 'react'
-
-
+import { useState } from 'react'
+import { NavLink } from 'react-router-dom'
 
 const Signin = () => {
+   const [userInfo, setuserInfo] = useState({ email: '', password: '' })
+   const [errorMessages, setErrorMessages] = useState({})
+   const [isSubmitted, setIsSubmitted] = useState(false)
+   const [userAuthInfo, setUserAuthInfo] = useState()
+   const [isDataLoading, setDataLoading] = useState(true)
 
-   const [contactInfo, setContactInfo] = useState({mail : "", pass : ""})
-
+   //Monitoring for field change
    const handleChange = (event) => {
-      setContactInfo({...contactInfo, [event.target.name] : event.target.value})
+      setuserInfo({
+         ...userInfo,
+         [event.target.name]: event.target.value,
+      })
    }
 
-   const handleSubmit =  (event) => {
-      event.preventDefault()
-      console.log(contactInfo);
+   const errors = {
+      uname: 'email invalide',
+      pass: 'Mot de passe invalide',
    }
+   // Generate JSX code for error message
+   const renderErrorMessage = (name) =>
+      name === errorMessages.name && (
+         <div className="error">{errorMessages.message}</div>
+      )
 
-   useEffect(() => {
-      async function fetchUSer(){
-         try{
-            const response = await fetch('')
-         }
-         catch{
+   //take infos user when submit
+   const handleSubmit = (event) => {
 
-         }
-         finally{
-            
-         }
+      async function fetchAuth() {
+         setDataLoading(true)
+         try {
+            const response = await fetch('http://localhost:3000/api/auth/login', {
+               method: 'POST',
+               headers: {
+                  Accept: 'application/json, text/plain',
+                  'Content-Type': 'application/json',
+               },
+               body: JSON.stringify({ email: userInfo.email , password: userInfo.password }),
+            })
+            const data = await response.json()
+            setUserAuthInfo(data)
+         } catch (error) {console.log(error)} 
+         finally { setDataLoading(false) }
       }
-      fetchUSer()
-   }, [])
+      fetchAuth()
+      event.preventDefault()
+   }
+
+   if(!isDataLoading && userAuthInfo.token !== null){
+      console.log('userAuthInfo : ', userAuthInfo)
+   }
 
    return (
       <div className="container">
@@ -39,31 +62,36 @@ const Signin = () => {
             <img src={logo} alt={logo} />
             <p>Connexion</p>
          </div>
-         <form className="form" onSubmit={ handleSubmit }>
+         <form className="form" onSubmit={handleSubmit}>
             <div className="form-container">
                <label>
                   <input
-                     type="mail"
-                     name="mail"
+                     type="email"
+                     name="email"
                      placeholder="jonhdoe@mail.fr"
-                     value={ contactInfo.mail }
+                     value={userInfo.email}
                      onChange={handleChange}
+                     required
                   />
+                  {renderErrorMessage('email')}
                </label>
 
                <label>
                   <input
                      type="password"
-                     name="pass"
+                     name="password"
                      placeholder="Mot de passe"
-                     value={ contactInfo.pass }
+                     value={userInfo.password}
                      onChange={handleChange}
+                     required
                   />
+                  {renderErrorMessage('pass')}
                </label>
 
                <button className="btn" type="submit" value="Envoyer">
                   Envoyer
                </button>
+               <div>Vous n'avez pas de compte <NavLink to='/signup'>Creez en un</NavLink></div>
             </div>
          </form>
       </div>
