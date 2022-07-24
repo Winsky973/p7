@@ -8,27 +8,27 @@ import { useState } from 'react'
 
 
 const CreatePost = () => {
+   const [userFormInfo, setuserFormInfo] = useState({
+      title: '',
+      description: '',
+   })
+
    // state pour le fichier image
    const [selectedFile, setSelectedFile] = useState()
    const [isFilePicked, setIsFilePicked] = useState(false)
-   // const [userFormInfo, setuserFormInfo] = useState({
-   //    title: '',
-   //    description: '',
-   // })
 
+   const handleImageChange = (event) => {
+      setSelectedFile(event.target.files[0])
+      setIsFilePicked(true)
+   }
 
-   // const handleImageChange = (event) => {
-   //    setSelectedFile(event.target.files[0])
-   //    setIsFilePicked(true)
-   // }
-
-   // //Monitoring for field change
-   // const handleChange = (event) => {
-   //    setuserFormInfo({
-   //       ...userFormInfo,
-   //       [event.target.name]: event.target.value,
-   //    })
-   // }
+   //Monitoring for field change
+   const handleChange = (event) => {
+      setuserFormInfo({
+         ...userFormInfo,
+         [event.target.name]: event.target.value,
+      })
+   }
 
    // take infos user when submit
    const handleSubmit = (event) => {
@@ -36,17 +36,15 @@ const CreatePost = () => {
 
       const postTitle = document.getElementById('post-title').value
       const postDescription = document.getElementById('post-description').value
-      const postImage = document.getElementById('post-image')
+      const postImage = document.getElementById('post-image').value
 
-      console.log('postTitle : ',postTitle)
-      console.log('postDescription : ', postDescription)
-      console.log('postImage : ', postImage.files[0])
       const formData = new FormData()
-      formData.append('description', postDescription)
-      formData.append('title', postTitle)
-      formData.append('image', postImage.files[0])
+      console.log('userFormInfo : ', userFormInfo)
+      formData.append('description', userFormInfo.description)
+      formData.append('title', userFormInfo.title)
 
-
+      console.log('selectedFile : ', selectedFile)
+      formData.append('image', selectedFile)
 
 
       fetch('http://localhost:3000/api/posts', {
@@ -55,7 +53,7 @@ const CreatePost = () => {
             'Content-Type': 'application/json'
           },
          method: 'POST',
-         body: formData,
+         body: JSON.stringify(formData),
       })
          .then((res) => {
             if (res.ok) res.json()
@@ -75,8 +73,8 @@ const CreatePost = () => {
                      name="title"
                      placeholder="Titre"
                      required
-                     // value={userFormInfo.title}
-                     // onChange={handleChange}
+                     value={userFormInfo.title}
+                     onChange={handleChange}
                   />
                </label>
                <label>
@@ -86,8 +84,8 @@ const CreatePost = () => {
                      cols="30"
                      rows="10"
                      placeholder="Description"
-                     // value={userFormInfo.description}
-                     // onChange={handleChange}
+                     value={userFormInfo.description}
+                     onChange={handleChange}
                   ></textarea>
                </label>
                <label htmlFor="file">
@@ -96,7 +94,7 @@ const CreatePost = () => {
                      type="file"
                      name="file"
                      accept="image/*"
-                     // onChange={handleImageChange}
+                     onChange={handleImageChange}
                   />
                </label>
                <button className="btn" type="submit" value="Envoyer">

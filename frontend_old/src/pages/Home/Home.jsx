@@ -1,17 +1,15 @@
 import React from 'react';
 import { useEffect, useState } from 'react'
 import Card from '../../components/Card/Card';
-import { useFetch } from '../../utils/hooks';
+import { useFetch } from '../../utils/hooks';    
 import Avatar from '../../assets/profile.svg'
 import './Home.css'
 
 const Home = () => {
 
     const [isDataLoading, setDataLoading] = useState(true)
-    const { data, isLoading } = useFetch(`http://localhost:3000/api/posts`)
 
     const postsData  = useFetch(`http://localhost:3000/api/posts`)
-    console.log('postsData : ', postsData)
 
     return (
         <div>

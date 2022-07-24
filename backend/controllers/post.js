@@ -4,12 +4,17 @@ const Posts = require('../models/Posts');
 
 /**Create one */
 exports.createPost = (req, res, next) => {
+    console.log('req.body : ', req.body)
     console.log('req.file : ', req.file)
-    const posts = new Posts({
-        // ...JSON.parse(req.body),
+    const post = new Posts({
+        ...JSON.parse(req.body.post),
+        // ...req.body.post,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     });
-    sauce.save()
+
+    console.log('posts : ', post)
+
+    post.save()
         .then(() => res.status(201).json({ message: 'Objet enregistré !' }))
         .catch(error => res.status(400).json({ error }));
 };
@@ -19,7 +24,7 @@ exports.modifyPost = (req, res, next) => {
     const postObject = req.file ? {
         ...JSON.parse(req.body.post),
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-    } : {...req.body };
+    } : {...req.body.post };
 
     /**Before update we take the old url image and delete it than push the new image */
     Posts.findOne({ _id: req.params.id })

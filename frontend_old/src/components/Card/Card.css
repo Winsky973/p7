@@ -1,0 +1,32 @@
+.post {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    margin: 0 auto;
+    margin-top: 2rem;
+    width: 30em;
+    padding: 2.5rem;
+    background-color: rgb(255, 215, 215, 20%);
+    border-radius: .3rem;
+}
+
+img {
+    object-fit: contain;
+    min-height: 100%;
+    max-width: 100%;
+}
+
+.post_user {
+    display: flex;
+    align-items: center;
+}
+
+.post-title,
+.post_user a {
+    font-weight: bold;
+}
+
+.post-like {
+    display: flex;
+    align-items: center;
+}

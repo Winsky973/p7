@@ -1,10 +1,9 @@
 import React from 'react'
-import './Signin.css'
+import './Signup.css'
 import logo from '../../assets/profile.svg'
 import { useState } from 'react'
-import { NavLink } from 'react-router-dom'
 
-const Signin = () => {
+const Signup = () => {
    const [userInfo, setuserInfo] = useState({ email: '', password: '' })
    const [errorMessages, setErrorMessages] = useState({})
    const [userAuthInfo, setUserAuthInfo] = useState()
@@ -34,7 +33,7 @@ const Signin = () => {
          setDataLoading(true)
          try {
             const response = await fetch(
-               'http://localhost:3000/api/auth/login',
+               'http://localhost:3000/api/auth/signup',
                {
                   method: 'POST',
                   headers: {
@@ -48,6 +47,8 @@ const Signin = () => {
                }
             )
             const data = await response.json()
+            console.log(data)
+
             setUserAuthInfo(data)
          } catch (error) {
             console.log(error)
@@ -59,16 +60,11 @@ const Signin = () => {
       event.preventDefault()
    }
 
-   if (!isDataLoading && userAuthInfo.token !== null) {
-      console.log('userAuthInfo : ', userAuthInfo)
-   }
-
-
    return (
       <div className="container">
          <div className="logo-container">
             <img src={logo} alt={logo} />
-            <p>Connexion</p>
+            <p>Inscription</p>
          </div>
          <form className="form" onSubmit={handleSubmit}>
             <div className="form-container">
@@ -76,12 +72,11 @@ const Signin = () => {
                   <input
                      type="email"
                      name="email"
-                     placeholder="jonhdoe@mail.fr"
-                     value={userInfo.email}
-                     onChange={handleChange}
+                     placeholder="mail"
                      required
+                     value={userInfo.mail}
+                     onChange={handleChange}
                   />
-                  {renderErrorMessage('email')}
                </label>
 
                <label>
@@ -89,24 +84,19 @@ const Signin = () => {
                      type="password"
                      name="password"
                      placeholder="Mot de passe"
+                     required
                      value={userInfo.password}
                      onChange={handleChange}
-                     required
                   />
-                  {renderErrorMessage('pass')}
                </label>
 
                <button className="btn" type="submit" value="Envoyer">
                   Envoyer
                </button>
-               <div>
-                  Vous n'avez pas de compte{' '}
-                  <NavLink to="/signup">Creez en un</NavLink>
-               </div>
             </div>
          </form>
       </div>
    )
 }
 
-export default Signin
+export default Signup
