@@ -55,7 +55,6 @@ textarea {
 }
 
 .btn {
-    background-color: #FD2D01;
     padding: .5rem .9rem;
     border-radius: .3rem;
     color: white;
@@ -65,4 +64,12 @@ textarea {
     align-self: center;
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
     cursor: pointer;
+}
+
+.btn--grey {
+    background-color: #4E5166;
+}
+
+.btn--red {
+    background-color: #FD2D01;
 }

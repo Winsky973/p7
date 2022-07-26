@@ -90,7 +90,7 @@ const Signup = () => {
                   />
                </label>
 
-               <button className="btn" type="submit" value="Envoyer">
+               <button className="btn btn--red" type="submit" value="Envoyer">
                   Envoyer
                </button>
             </div>

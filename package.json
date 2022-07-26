@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "nodemon": "^2.0.19",
     "react-hook-form": "^7.33.1"
   }
 }

@@ -4,15 +4,11 @@ const Posts = require('../models/Posts');
 
 /**Create one */
 exports.createPost = (req, res, next) => {
-    console.log('req.body : ', req.body)
-    console.log('req.file : ', req.file)
+    console.log(req.body)
     const post = new Posts({
         ...JSON.parse(req.body.post),
-        // ...req.body.post,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     });
-
-    console.log('posts : ', post)
 
     post.save()
         .then(() => res.status(201).json({ message: 'Objet enregistré !' }))
@@ -42,6 +38,7 @@ exports.modifyPost = (req, res, next) => {
                 })
             }
             if (post.userId !== req.auth.userId) {
+                console.log('req.auth.userId : ', req.auth.userId)
                 res.status(401).json({
                     error: new Error('Requête non autorisée')
                 });
@@ -63,14 +60,15 @@ exports.deletePost = (req, res, next) => {
                     error: new Error('aucun objet trouvé')
                 })
             }
+
             if (post.userId !== req.auth.userId) {
                 res.status(401).json({
                     error: new Error('Requête non autorisée')
                 });
             }
             const filename = post.imageUrl.split('/images/')[1];
-            fs.unlink(`images/${filename}`, () => {
 
+            fs.unlink(`images/${filename}`, () => {
                 Posts.deleteOne({ _id: req.params.id })
                     .then(() => res.status(200).json({ message: 'Objet supprimé' }))
                     .catch(error => res.status(400).json({ error }));
@@ -148,6 +146,7 @@ function foundIdFromArray(array, userId) {
     }
 }
 
+/**Enlever l'userID dans le tableau de userLiked */
 function removeUserId(post, userId) {
     const foundIndexIdUsersLiked = post['usersLiked'].findIndex(element => element === userId);
     const foundIndexIdUsersDisliked = post['usersDisliked'].findIndex(element => element === userId);

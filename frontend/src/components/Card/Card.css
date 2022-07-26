@@ -26,7 +26,14 @@ img {
     font-weight: bold;
 }
 
-.post-like {
+.like-container {
     display: flex;
     align-items: center;
+    column-gap: 1rem;
+}
+
+.post-likes {
+    display: flex;
+    align-items: center;
+    column-gap: .2rem;
 }

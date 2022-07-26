@@ -1,14 +1,18 @@
 import React from 'react'
 import './Signin.css'
 import logo from '../../assets/profile.svg'
-import { useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, Routes, Route, Navigate } from 'react-router-dom'
+import { useContext, useState } from 'react'
+import { AuthContext } from '../../utils/context/Auth/AuthContext'
+import { setItem } from '../../services/LocalStorage'
 
 const Signin = () => {
    const [userInfo, setuserInfo] = useState({ email: '', password: '' })
    const [errorMessages, setErrorMessages] = useState({})
    const [userAuthInfo, setUserAuthInfo] = useState()
    const [isDataLoading, setDataLoading] = useState(true)
+
+   const auth = useContext(AuthContext)
 
    //Monitoring for field change
    const handleChange = (event) => {
@@ -48,19 +52,21 @@ const Signin = () => {
                }
             )
             const data = await response.json()
+
+            if (data.token === undefined) {
+               setErrorMessages(data)
+               setUserAuthInfo('')
+            }
+            setErrorMessages('')
             setUserAuthInfo(data)
          } catch (error) {
-            console.log(error)
+            setErrorMessages(error)
          } finally {
             setDataLoading(false)
          }
       }
       fetchAuth()
       event.preventDefault()
-   }
-
-   if (!isDataLoading && userAuthInfo.token !== null) {
-      console.log('userAuthInfo : ', userAuthInfo)
    }
 
 
@@ -70,6 +76,11 @@ const Signin = () => {
             <img src={logo} alt={logo} />
             <p>Connexion</p>
          </div>
+         {/* {userAuthInfo.token !== undefined ? (
+            setItem('user', JSON.stringify({ ...userAuthInfo }))
+         ) : (
+            <div>{userAuthInfo.message}</div>
+         )} */}
          <form className="form" onSubmit={handleSubmit}>
             <div className="form-container">
                <label>
@@ -81,7 +92,7 @@ const Signin = () => {
                      onChange={handleChange}
                      required
                   />
-                  {renderErrorMessage('email')}
+                  {renderErrorMessage({ userAuthInfo })}
                </label>
 
                <label>
@@ -96,7 +107,7 @@ const Signin = () => {
                   {renderErrorMessage('pass')}
                </label>
 
-               <button className="btn" type="submit" value="Envoyer">
+               <button className="btn btn--red" type="submit" value="Envoyer">
                   Envoyer
                </button>
                <div>
