@@ -10,6 +10,12 @@ const CreatePost = () => {
    /**Si l'image a changé */
    const [imageChange, setImageChange] = useState(false)
    const [imagePicked, setImagePicked] = useState(false)
+   const [userAuthLocalStorage, setAuthLocalStorage] = useState(() => {
+      // getting stored value
+      const saved = JSON.parse(localStorage.getItem('userAuth'))
+      return saved || ''
+   })
+   console.log('userAuthLocalStorage : ', userAuthLocalStorage)
 
    const urlParams = useParams()
    
@@ -37,17 +43,15 @@ const CreatePost = () => {
       {
          formData.append(
             'post',
-            JSON.stringify({ description: postDescription, title: postTitle, userId: "62a5b8718b8744293ae819ce" })
+            JSON.stringify({ description: postDescription, title: postTitle, userId: userAuthLocalStorage.userId })
          )
          formData.append('image', postImage.files[0])
       }else{
          formData.append(
             'post',
-            JSON.stringify({ description: postDescription, title: postTitle, userId: "62a5b8718b8744293ae819ce" })
+            JSON.stringify({ description: postDescription, title: postTitle, userId: userAuthLocalStorage.userId })
          )
       }
-
-      console.log(formData)
 
       fetch(`http://localhost:3000/api/posts/${urlParams.id}`, {
          method: 'PUT',

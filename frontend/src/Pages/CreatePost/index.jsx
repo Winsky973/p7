@@ -3,7 +3,13 @@ import { useState } from 'react'
 const CreatePost = () => {
    // state pour le fichier image
    const [message, setMessage] = useState()
+   const [userAuthLocalStorage, setAuthLocalStorage] = useState(() => {
+      // getting stored value
+      const saved = JSON.parse(localStorage.getItem('userAuth'))
+      return saved || ''
+   })
 
+   console.log('userAuthLocalStorage : ', userAuthLocalStorage)
    // take infos user when submit
    const handleSubmit = (event) => {
       event.preventDefault()
@@ -13,9 +19,10 @@ const CreatePost = () => {
       const postDescription = document.getElementById('post-description').value
       const postImage = document.getElementById('post-image')
 
+
       
       const formData = new FormData()
-      formData.append('post', JSON.stringify({description: postDescription, title: postTitle, userId: "62a5b8718b8744293ae819ce"}))
+      formData.append('post', JSON.stringify({description: postDescription, title: postTitle, userId: userAuthLocalStorage.userId , token: userAuthLocalStorage.token  }))
       formData.append('image', postImage.files[0])
 
      fetch(`http://localhost:3000/api/posts`, {

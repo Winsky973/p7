@@ -9,7 +9,7 @@ const { json } = require('express');
 
 
 /**Create one */
-router.post('/', /*auth ,*/ multer, postCtrl.createPost);
+router.post('/', auth, multer, postCtrl.createPost);
 /**Like a Post */
 router.post('/:id/like', /*auth,*/ postCtrl.likePost);
 /**update one */

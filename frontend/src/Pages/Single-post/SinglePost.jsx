@@ -9,6 +9,9 @@ const SinglePost = () => {
    const urlParams = useParams()
    const postsData = useFetch(`http://localhost:3000/api/posts/${urlParams.id}`)
 
+   
+console.log('postsData : ', postsData)
+
    return (
       <div>
          {!postsData.isDataLoading ? (
@@ -21,6 +24,7 @@ const SinglePost = () => {
                likes={postsData.data.likes}
                dislikes={postsData.data.dislikes}
                bool={true}
+               userId={postsData.data.userId}
             />
          ) : (
             <div>Votre fil d'actualité est vide</div>

@@ -1,14 +1,31 @@
-import { NavLink } from 'react-router-dom'
+import { Navigate, NavLink } from 'react-router-dom'
 import logoPrimary from '../../assets/logo-header.webp'
-import { useContext, React } from 'react'
+import { Route, Routes } from 'react-router-dom'
+import { useContext, React, useState } from 'react'
 import { AuthContext } from '../../utils/context/Auth/AuthContext'
+import { getItem, removeItem } from '../../services/LocalStorage'
 import './Header.css'
+import { useEffect } from 'react'
 const Header = () => {
-   const auth = useContext(AuthContext)
-   console.log('auth', auth.isAuthenticated)
+   const [auth, setAuth] = useContext(AuthContext)
 
-   function handleLogOut(){
-      console.log('On est déconnecté')
+   /**get les informations du local storage afin de pouvoir garder la connexion */
+   const [userAuthLocalStorage, setAuthLocalStorage] = useState(() => {
+      // getting stored value
+      const saved = JSON.parse(localStorage.getItem('userAuth'))
+      return saved || ''
+   })
+
+   if (userAuthLocalStorage !== '') {
+      setAuth(true)
+   }
+
+   function handleLogOut() {
+      removeItem('userAuth')(
+         <Routes>
+            <Route path="/" element={<Navigate to="/" replace />} />
+         </Routes>
+      )
    }
 
    return (
@@ -19,13 +36,15 @@ const Header = () => {
             </NavLink>
          </div>
          <ul className="navigation-liste">
-            {auth.isAuthenticated ? (
+            {auth ? (
                <>
                   <li>
                      <NavLink to="/create">Ajouter un post</NavLink>
                   </li>
                   <li>
-                     <button className='btn btn--red' onClick={handleLogOut}>Log out</button>
+                     <button className="btn btn--red" onClick={handleLogOut}>
+                        Log out
+                     </button>
                   </li>
                </>
             ) : (

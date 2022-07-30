@@ -8,11 +8,11 @@ import { setItem } from '../../services/LocalStorage'
 
 const Signin = () => {
    const [userInfo, setuserInfo] = useState({ email: '', password: '' })
-   const [errorMessages, setErrorMessages] = useState({})
-   const [userAuthInfo, setUserAuthInfo] = useState()
+   const [errorMessages, setErrorMessages] = useState(false)
+   const [userAuthInfo, setUserAuthInfo] = useState({})
    const [isDataLoading, setDataLoading] = useState(true)
 
-   const auth = useContext(AuthContext)
+   const [auth, setAuth] = useContext(AuthContext)
 
    //Monitoring for field change
    const handleChange = (event) => {
@@ -54,11 +54,13 @@ const Signin = () => {
             const data = await response.json()
 
             if (data.token === undefined) {
-               setErrorMessages(data)
+               setErrorMessages(true)
                setUserAuthInfo('')
+            } else {
+               setErrorMessages(false)
+               setUserAuthInfo(data)
+               setAuth(true)
             }
-            setErrorMessages('')
-            setUserAuthInfo(data)
          } catch (error) {
             setErrorMessages(error)
          } finally {
@@ -69,18 +71,24 @@ const Signin = () => {
       event.preventDefault()
    }
 
-
    return (
       <div className="container">
          <div className="logo-container">
             <img src={logo} alt={logo} />
             <p>Connexion</p>
          </div>
-         {/* {userAuthInfo.token !== undefined ? (
-            setItem('user', JSON.stringify({ ...userAuthInfo }))
+         {!userAuthInfo.hasOwnProperty('userId') ? (
+            <div>Compte ou mot de passe incorret</div>
          ) : (
-            <div>{userAuthInfo.message}</div>
-         )} */}
+            setItem(
+               'userAuth',
+               JSON.stringify({ ...userAuthInfo })
+            )(
+               <Routes>
+                  <Route path="/" element={<Navigate to="/" replace />} />
+               </Routes>
+            )
+         )}
          <form className="form" onSubmit={handleSubmit}>
             <div className="form-container">
                <label>
@@ -111,7 +119,7 @@ const Signin = () => {
                   Envoyer
                </button>
                <div>
-                  Vous n'avez pas de compte{' '}
+                  Vous n'avez pas de compte {String(auth)}{' '}
                   <NavLink to="/signup">Creez en un</NavLink>
                </div>
             </div>

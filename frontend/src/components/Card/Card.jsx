@@ -4,7 +4,7 @@ import heartLogo from '../../assets/heart.svg'
 import './Card.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCoffee } from '@fortawesome/free-solid-svg-icons'
-import { useEffect } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const element = <FontAwesomeIcon icon={faCoffee} />
@@ -17,8 +17,16 @@ const Card = ({
    id,
    bool,
    avatar,
-   dislikes
+   dislikes,
+   userId,
 }) => {
+   const [userAuthLocalStorage, setAuthLocalStorage] = useState(() => {
+      // getting stored value
+      const saved = JSON.parse(localStorage.getItem('userAuth'))
+      return saved || ''
+   })
+   console.log('userAuthLocalStorage : ', userAuthLocalStorage)
+   console.log('userId : ', userId)
    return (
       <article className="post">
          {!bool ? (
@@ -76,24 +84,30 @@ const Card = ({
                      <span> {dislikes} </span>
                   </div>
                </div>
-               <div className="btn-container">
-                  <Link className="btn btn--grey" to={`/modify/${id}`}>
-                     Modifier
-                  </Link>
-                  <button
-                     className="btn btn--red"
-                     onClick={() => {fetch(`http://localhost:3000/api/posts/${id}`, {
-                        method: 'DELETE',
-                        body: JSON.stringify({userId: '62a5b8718b8744293ae819ce'}),
-                     })
-                        .then((res) => res.json())
-                        .then((data) => console.log(data))
-                        .catch((error) => console.log(error))}}
-                  >
-                     {' '}
-                     Supprimer{' '}
-                  </button>
-               </div>
+               {userId === userAuthLocalStorage.userId ? (
+                  <div className="btn-container">
+                     <Link className="btn btn--grey" to={`/modify/${id}`}>
+                        Modifier
+                     </Link>
+                     <button
+                        className="btn btn--red"
+                        onClick={() => {
+                           fetch(`http://localhost:3000/api/posts/${id}`, {
+                              method: 'DELETE',
+                              body: JSON.stringify({
+                                 userId: userAuthLocalStorage.userId,
+                              }),
+                           })
+                              .then((res) => res.json())
+                              .then((data) => console.log(data))
+                              .catch((error) => console.log(error))
+                        }}
+                     >
+                        {' '}
+                        Supprimer{' '}
+                     </button>
+                  </div>
+               ) : null}
             </div>
          )}
       </article>
