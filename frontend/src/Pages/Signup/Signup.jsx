@@ -1,13 +1,14 @@
-import React from 'react'
+import { useState, React } from 'react'
+import { useNavigate } from 'react-router-dom'
 import './Signup.css'
 import logo from '../../assets/profile.svg'
-import { useState } from 'react'
 
 const Signup = () => {
    const [userInfo, setuserInfo] = useState({ email: '', password: '' })
-   const [errorMessages, setErrorMessages] = useState({})
-   const [userAuthInfo, setUserAuthInfo] = useState()
+   const [userAuthStatueCode, setUserAuthStatueCode] = useState()
    const [isDataLoading, setDataLoading] = useState(true)
+
+   let navigate = useNavigate()
 
    //Monitoring for field change
    const handleChange = (event) => {
@@ -17,11 +18,20 @@ const Signup = () => {
       })
    }
 
-   // Generate JSX code for error message
-   const renderErrorMessage = (name) =>
-      name === errorMessages.name && (
-         <div className="error">{errorMessages.message}</div>
+   function ToggleConnect() {
+      return (
+         <>
+            <div>Comte créer</div>
+            <div>Connectez vous</div>
+            <button
+               className="btn btn--red"
+               onClick={navigate('/signup', { replace: true })}
+            >
+               Connexion
+            </button>
+         </>
       )
+   }
 
    //take infos user when submit
    const handleSubmit = (event) => {
@@ -43,9 +53,9 @@ const Signup = () => {
                }
             )
             const data = await response.json()
-            console.log(data)
-
-            setUserAuthInfo(data)
+            if (response.status === 201) {
+               setUserAuthStatueCode(response.status)
+            }
          } catch (error) {
             console.log(error)
          } finally {
@@ -55,6 +65,8 @@ const Signup = () => {
       fetchAuth()
       event.preventDefault()
    }
+
+   console.log(userAuthStatueCode)
 
    return (
       <div className="container">
@@ -85,7 +97,6 @@ const Signup = () => {
                      onChange={handleChange}
                   />
                </label>
-
                <button className="btn btn--red" type="submit" value="Envoyer">
                   Envoyer
                </button>

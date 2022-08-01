@@ -14,7 +14,7 @@ const Like = ({ id, usersLiked, likes }) => {
    // let buffer = { userId: auth.userId, like }
 
    const foundUserLiked = usersLiked.findIndex((element) => {
-      return element === auth.userId
+      return element === auth?.userId
    })
 
    useEffect(() => {
