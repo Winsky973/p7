@@ -61,8 +61,7 @@ const Card = ({
                </div>
                <div className="like-container">
                   <div className="post-likes">
-                     <Like id={id} usersLiked={usersLiked} />
-                     <span>{likes}</span>
+                     <Like id={id} usersLiked={usersLiked} likes={likes}/>
                   </div>
                </div>
             </div>
@@ -83,8 +82,7 @@ const Card = ({
                </div>
                <div>
                   <div className="post-likes">
-                     <Like id={id} usersLiked={usersLiked} />
-                     <span> {likes} </span>
+                     <Like id={id} usersLiked={usersLiked} likes={likes} />
                   </div>
                </div>
                {userId === auth.userId ? (

@@ -6,49 +6,55 @@ import { AuthContext } from '../../utils/context/Auth/AuthContext'
 import './Like.css'
 import { useFetch } from '../../utils/hooks'
 
-const Like = ({ id, usersLiked }) => {
-   const [like, setLike] = useState(0)
-   const [isClicked, setIsClicked] = useState(false)
+const Like = ({ id, usersLiked, likes }) => {
+   const [nbLike, setNbLike] = useState(0)
+   const [newLike, setNewLike] = useState(false)
    const [auth, setAuth] = useContext(AuthContext)
 
-   const buffer = { userId: auth.userId, like }
+   // let buffer = { userId: auth.userId, like }
 
    const foundUserLiked = usersLiked.findIndex((element) => {
       return element === auth.userId
    })
 
-   const toggleLike = () => {
-      if (like === 0) {
-         setLike(1)
-         setIsClicked(true)
-      } else {
-         setLike(0)
-         setIsClicked(true)
+   useEffect(() => {
+      if (foundUserLiked !== -1) {
+         setNewLike(true)
       }
-   }
+   }, [foundUserLiked])
+
+   useEffect(() => {
+      setNbLike(likes)
+   }, [])
 
    function UserLiked() {
-      if (foundUserLiked !== -1) {
+      if (newLike || foundUserLiked !== -1) {
          return (
-            <FontAwesomeIcon
-               icon={faFasHeart}
-               className="faHeart faHeart--red"
-               onClick={() => toggleLike}
-            />
+            <div>
+               <FontAwesomeIcon
+                  icon={faFasHeart}
+                  className="faHeart faHeart--red"
+                  onClick={() => sendLike(0, auth.userId)}
+               />
+               <span> {nbLike} </span>
+            </div>
          )
-      } 
-      else  {
+      } else {
          return (
-            <FontAwesomeIcon
-               icon={faFarHeart}
-               className="faHeart faHeart--black"
-               size="1x"
-            />
+            <div>
+               <FontAwesomeIcon
+                  icon={faFarHeart}
+                  className="faHeart faHeart--black"
+                  size="1x"
+                  onClick={() => sendLike(1, auth.userId)}
+               />
+               <span> {nbLike} </span>
+            </div>
          )
       }
    }
 
-   function sendLike() {
+   function sendLike(like, userId) {
       fetch(`http://localhost:3000/api/posts/${id}/like`, {
          headers: {
             Accept: 'application/json',
@@ -56,19 +62,24 @@ const Like = ({ id, usersLiked }) => {
             Authorization: `bearer ${auth.token}`,
          },
          method: 'POST',
-         body: JSON.stringify({ ...buffer }),
+         body: JSON.stringify({ like, userId }),
       })
          .then((res) => res.json())
-         .then((data) => console.log(data))
+         .then((data) => {
+            console.log(data)
+            if (like === 1) {
+               setNewLike(true)
+               setNbLike(parseInt(nbLike) + 1)
+            } else {
+               setNewLike(false)
+               setNbLike(parseInt(nbLike) - 1)
+            }
+         })
          .catch((error) => console.log(error))
    }
 
-   if (isClicked) {
-      sendLike()
-   }
-
    return (
-      <div onClick={() => toggleLike()}>
+      <div>
          <UserLiked />
       </div>
    )

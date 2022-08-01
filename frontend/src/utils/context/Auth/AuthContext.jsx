@@ -10,8 +10,6 @@ export const AuthProvider = ({ children }) => {
       return saved
    })
    const [isAuthenticated, setIsAuthenticated] = useState(userAuthLocalStorage)
-   console.log('userAuthLocalStorage : ', userAuthLocalStorage)
-
 
    return (
       <AuthContext.Provider value={[isAuthenticated, setIsAuthenticated]}>

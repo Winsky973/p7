@@ -21,7 +21,7 @@ const Home = () => {
             setIsDataLoading(false)
          })
          .catch((error) => console.log(error))
-   }, [])
+   }, [auth])
 
    return (
       <div>

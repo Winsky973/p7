@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import './Signin.css'
 import logo from '../../assets/profile.svg'
-import { NavLink, Navigate, Routes } from 'react-router-dom'
+import { NavLink, Navigate, Routes, Route, useNavigate } from 'react-router-dom'
 import { useContext, useState } from 'react'
 import { AuthContext } from '../../utils/context/Auth/AuthContext'
 import { setItem } from '../../services/LocalStorage'
@@ -11,6 +11,7 @@ const Signin = ({ history }) => {
    const [errorMessages, setErrorMessages] = useState(false)
    const [userAuthInfo, setUserAuthInfo] = useState({})
    const [isDataLoading, setDataLoading] = useState(true)
+   let navigate = useNavigate()
 
    const [auth, setAuth] = useContext(AuthContext)
 
@@ -55,7 +56,9 @@ const Signin = ({ history }) => {
             } else {
                setErrorMessages(false)
                setUserAuthInfo(data)
-               auth(data)
+               setItem('userAuth', JSON.stringify(data))
+               setAuth(data)
+               navigate('/')
             }
          } catch (error) {
             setErrorMessages(error)
@@ -79,9 +82,7 @@ const Signin = ({ history }) => {
          </div>
          {!userAuthInfo.hasOwnProperty('userId') ? (
             <div>Compte ou mot de passe incorret</div>
-         ) : (
-            (setItem('userAuth', JSON.stringify(userAuthInfo)))
-         )}
+         ) : (null)}
          <form className="form" onSubmit={handleSubmit}>
             <div className="form-container">
                <label>
