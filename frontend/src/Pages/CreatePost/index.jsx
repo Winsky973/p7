@@ -1,15 +1,11 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
+import { AuthContext } from '../../utils/context/Auth/AuthContext'
 
 const CreatePost = () => {
    // state pour le fichier image
    const [message, setMessage] = useState()
-   const [userAuthLocalStorage, setAuthLocalStorage] = useState(() => {
-      // getting stored value
-      const saved = JSON.parse(localStorage.getItem('userAuth'))
-      return saved || ''
-   })
+   const [auth, setAuth] = useContext(AuthContext)
 
-   console.log('userAuthLocalStorage : ', userAuthLocalStorage)
    // take infos user when submit
    const handleSubmit = (event) => {
       event.preventDefault()
@@ -19,16 +15,24 @@ const CreatePost = () => {
       const postDescription = document.getElementById('post-description').value
       const postImage = document.getElementById('post-image')
 
-
-      
       const formData = new FormData()
-      formData.append('post', JSON.stringify({description: postDescription, title: postTitle, userId: userAuthLocalStorage.userId , token: userAuthLocalStorage.token  }))
+      formData.append(
+         'post',
+         JSON.stringify({
+            description: postDescription,
+            title: postTitle,
+            userId: auth.userId,
+         })
+      )
       formData.append('image', postImage.files[0])
 
-     fetch(`http://localhost:3000/api/posts`, {
-            method: 'POST',
-            body: formData,
-         })
+      fetch(`http://localhost:3000/api/posts`, {
+         headers: {
+            Authorization: `bearer ${auth.token}`,
+         },
+         method: 'POST',
+         body: formData,
+      })
          .then((res) => res.json())
          .then((data) => setMessage(data))
          .catch((error) => console.log(error))

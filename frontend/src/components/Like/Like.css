@@ -1,0 +1,11 @@
+.faHeart {
+    cursor: pointer;
+}
+
+.faHeart--red {
+    color: red;
+}
+
+.faHeart--black {
+    color: black;
+}

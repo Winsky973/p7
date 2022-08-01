@@ -1,33 +1,25 @@
-import React, { useEffect } from 'react'
-import PostForm from '../../components/PostForm'
-import { useFetch, usePostFetch } from '../../utils/hooks'
+import { React, useContext } from 'react'
+import { useFetch } from '../../utils/hooks'
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
-
-// sauce: '{"name":"photoshop","manufacturer":"rzeef","description":"zefzefzefe","mainPepper":"eazfzefzefe","heat":4,"userId":"62a5b8718b8744293ae819ce"}'
+import { AuthContext } from '../../utils/context/Auth/AuthContext'
 
 const CreatePost = () => {
    /**Si l'image a changé */
    const [imageChange, setImageChange] = useState(false)
-   const [imagePicked, setImagePicked] = useState(false)
-   const [userAuthLocalStorage, setAuthLocalStorage] = useState(() => {
-      // getting stored value
-      const saved = JSON.parse(localStorage.getItem('userAuth'))
-      return saved || ''
-   })
-   console.log('userAuthLocalStorage : ', userAuthLocalStorage)
+   const [imagePicked, setImagePicked] = useState()
+   const [auth, setAuth] = useContext(AuthContext)
 
    const urlParams = useParams()
-   
-   const postsData = useFetch(`http://localhost:3000/api/posts/${urlParams.id}`)
-   console.log('postsData : ', postsData.data)
 
-   function handleImageChange (event){
-      setImagePicked(event.target.files[0])
+   const postsData = useFetch(`http://localhost:3000/api/posts/${urlParams.id}`)
+
+   function handleImageChange(event) {
       setImageChange(true)
+      console.log('event : ', event.target.files[0])
+      setImagePicked(event.target.files[0])
    }
-   
-   
+
    // take infos user when submit
    const handleSubmit = (event) => {
       event.preventDefault()
@@ -37,23 +29,31 @@ const CreatePost = () => {
       const postDescription = document.getElementById('post-description').value
       const postImage = document.getElementById('post-image')
 
-      const formData = new FormData()
-
-      if(imageChange)
-      {
+      let formData = new FormData()
+      if (imageChange) {
          formData.append(
             'post',
-            JSON.stringify({ description: postDescription, title: postTitle, userId: userAuthLocalStorage.userId })
+            JSON.stringify({
+               description: postDescription,
+               title: postTitle,
+               userId: auth.userId,
+            })
          )
          formData.append('image', postImage.files[0])
-      }else{
-         formData.append(
-            'post',
-            JSON.stringify({ description: postDescription, title: postTitle, userId: userAuthLocalStorage.userId })
-         )
+      } else {
+         formData = JSON.stringify({
+            description: postDescription,
+            title: postTitle,
+            userId: auth.userId,
+         })
       }
-
+      console.log('imagePicked : ', imagePicked)
       fetch(`http://localhost:3000/api/posts/${urlParams.id}`, {
+         headers: {
+            // Accept: 'application/json',
+            // 'Content-Type': 'application/json',
+            Authorization: `bearer ${auth.token}`,
+         },
          method: 'PUT',
          body: formData,
       })
@@ -66,48 +66,58 @@ const CreatePost = () => {
       <div className="container">
          <form className="form" onSubmit={handleSubmit}>
             <div className="form-container">
-               <label>
-                  <input
-                     id="post-title"
-                     type="text"
-                     name="title"
-                     placeholder="Titre"
-                     required
-                     defaultValue={postsData.data.title}
-                  />
-               </label>
-               <label>
-                  <textarea
-                     id="post-description"
-                     name="description"
-                     cols="30"
-                     rows="10"
-                     placeholder="Description"
-                     defaultValue={postsData.data.description}
-                  ></textarea>
-               </label>
-               <label htmlFor="file">
-                  {imageChange ? (
-                     <div>
-                     <img src={imagePicked} alt="imgUrl" />
-                  </div>
-                  ) : (
-                     <div>
-                     <img src={postsData.data.imageUrl} alt="imgUrl" />
-                  </div>
-                  )}
-                  <input
-                     id="post-image"
-                     type="file"
-                     name="file"
-                     accept="image/*"
-                     placeholder='modifier'
-                     onChange={handleImageChange}
-                  />
-               </label>
-               <button className="btn btn--red" type="submit" value="Envoyer">
-                  Envoyer
-               </button>
+               <div className="form-input">
+                  <label>
+                     <input
+                        id="post-title"
+                        type="text"
+                        name="title"
+                        placeholder="Titre"
+                        required
+                        defaultValue={postsData.data.title}
+                     />
+                  </label>
+                  <label>
+                     <textarea
+                        id="post-description"
+                        name="description"
+                        cols="30"
+                        rows="10"
+                        placeholder="Description"
+                        defaultValue={postsData.data.description}
+                     ></textarea>
+                  </label>
+               </div>
+               <div className="form-image">
+                  <label htmlFor="file">
+                     {imageChange ? (
+                        <div>
+                           <img src={imagePicked} alt="imgUrl" />
+                        </div>
+                     ) : (
+                        <div>
+                           <img src={postsData.data.imageUrl} alt="imgUrl" />
+                        </div>
+                     )}
+                     <input
+                        id="post-image"
+                        type="file"
+                        name="file"
+                        accept="image/*"
+                        placeholder="modifier"
+                        onChange={handleImageChange}
+                     />
+                  </label>
+               </div>
+               <div className="btn-container">
+                  <button
+                     className="btn btn--red"
+                     type="submit"
+                     value="Envoyer"
+                  >
+                     Envoyer
+                  </button>
+               </div>
             </div>
          </form>
       </div>

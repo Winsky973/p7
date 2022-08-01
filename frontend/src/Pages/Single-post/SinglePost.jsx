@@ -22,9 +22,9 @@ console.log('postsData : ', postsData)
                picture={postsData.data.imageUrl}
                description={postsData.data.description}
                likes={postsData.data.likes}
-               dislikes={postsData.data.dislikes}
                bool={true}
                userId={postsData.data.userId}
+               usersLiked={postsData.data.usersLiked}
             />
          ) : (
             <div>Votre fil d'actualité est vide</div>

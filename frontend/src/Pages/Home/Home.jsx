@@ -1,5 +1,5 @@
 import React from 'react'
-import { useEffect, useState,useContext } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import Card from '../../components/Card/Card'
 import Avatar from '../../assets/profile.svg'
 import './Home.css'
@@ -12,18 +12,6 @@ const Home = () => {
    const [data, setData] = useState()
    const [isDataLoading, setIsDataLoading] = useState(true)
    const [auth, setAuth] = useContext(AuthContext)
-
-   // /**get les informations du local storage afin de pouvoir garder la connexion */
-   // const [userAuthLocalStorage, setAuthLocalStorage] = useState(() => {
-   //    // getting stored value
-   //    const saved = JSON.parse(localStorage.getItem("userAuth"));
-   //    return saved || "";
-   //  });
-
-   //  if (userAuthLocalStorage !== ""){
-   //    setAuth(true)
-   //  }
-
 
    useEffect(() => {
       fetch(`http://localhost:3000/api/posts`)
@@ -48,6 +36,7 @@ const Home = () => {
                   description={post.description}
                   likes={post.likes}
                   bool={false}
+                  usersLiked={post.usersLiked}
                />
             ))
          ) : (

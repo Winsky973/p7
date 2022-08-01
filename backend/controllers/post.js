@@ -1,15 +1,12 @@
 const fs = require('fs');
 const Posts = require('../models/Posts');
 
-
 /**Create one */
 exports.createPost = (req, res, next) => {
-    console.log(req.body)
     const post = new Posts({
         ...JSON.parse(req.body.post),
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     });
-
     post.save()
         .then(() => res.status(201).json({ message: 'Objet enregistré !' }))
         .catch(error => res.status(400).json({ error }));
@@ -17,29 +14,32 @@ exports.createPost = (req, res, next) => {
 
 /**Update one */
 exports.modifyPost = (req, res, next) => {
-    console.log(req.headers.authorization)
+
     const postObject = req.file ? {
         ...JSON.parse(req.body.post),
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-    } : {...req.body.post };
+    } : {...req.body };
 
     /**Before update we take the old url image and delete it than push the new image */
+
     Posts.findOne({ _id: req.params.id })
         .then((post) => {
             if (req.file) {
+                console.log('Il existe un file')
                 const filename = post.imageUrl.split('/images/')[1];
                 fs.unlink(`images/${filename}`, function(error) {
                     if (error) return error;
                     console.log('image delete');
                 });
             }
+
             if (!post) {
                 res.status(404).json({
                     error: new Error('aucun objet trouvé')
                 })
             }
+
             if (post.userId !== req.auth.userId) {
-                console.log('req.auth.userId : ', req.auth.userId)
                 res.status(401).json({
                     error: new Error('Requête non autorisée')
                 });
@@ -51,7 +51,6 @@ exports.modifyPost = (req, res, next) => {
         })
         .catch((error) => { res.status(400).json({ error: error }) });
 };
-
 /**Delete one */
 exports.deletePost = (req, res, next) => {
     Posts.findOne({ _id: req.params.id })

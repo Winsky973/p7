@@ -17,10 +17,6 @@ const Signup = () => {
       })
    }
 
-   const errors = {
-      uname: 'email invalide',
-      pass: 'Mot de passe invalide',
-   }
    // Generate JSX code for error message
    const renderErrorMessage = (name) =>
       name === errorMessages.name && (

@@ -1,6 +1,5 @@
 import { createContext, useState } from 'react'
 import React from 'react'
-import { getItem } from '../../../services/LocalStorage'
 
 export const AuthContext = createContext()
 
@@ -10,13 +9,13 @@ export const AuthProvider = ({ children }) => {
       const saved = JSON.parse(localStorage.getItem('userAuth'))
       return saved
    })
+   const [isAuthenticated, setIsAuthenticated] = useState(userAuthLocalStorage)
    console.log('userAuthLocalStorage : ', userAuthLocalStorage)
 
-   const [isAuthenticated, setIsAuthenticated] = useState(userAuthLocalStorage)
 
    return (
-      <AuthContext.Provider value={[ isAuthenticated, setIsAuthenticated] }>
-         {children}²
+      <AuthContext.Provider value={[isAuthenticated, setIsAuthenticated]}>
+         {children}
       </AuthContext.Provider>
-   ) 
+   )
 }

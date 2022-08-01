@@ -1,12 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './Signin.css'
 import logo from '../../assets/profile.svg'
-import { NavLink, Routes, Route, Navigate } from 'react-router-dom'
+import { NavLink, Navigate, Routes } from 'react-router-dom'
 import { useContext, useState } from 'react'
 import { AuthContext } from '../../utils/context/Auth/AuthContext'
 import { setItem } from '../../services/LocalStorage'
 
-const Signin = () => {
+const Signin = ({ history }) => {
    const [userInfo, setuserInfo] = useState({ email: '', password: '' })
    const [errorMessages, setErrorMessages] = useState(false)
    const [userAuthInfo, setUserAuthInfo] = useState({})
@@ -22,10 +22,6 @@ const Signin = () => {
       })
    }
 
-   const errors = {
-      uname: 'email invalide',
-      pass: 'Mot de passe invalide',
-   }
    // Generate JSX code for error message
    const renderErrorMessage = (name) =>
       name === errorMessages.name && (
@@ -59,7 +55,7 @@ const Signin = () => {
             } else {
                setErrorMessages(false)
                setUserAuthInfo(data)
-               setAuth(true)
+               auth(data)
             }
          } catch (error) {
             setErrorMessages(error)
@@ -71,6 +67,10 @@ const Signin = () => {
       event.preventDefault()
    }
 
+   function handleRedirect() {
+      // window.location.reload()
+   }
+
    return (
       <div className="container">
          <div className="logo-container">
@@ -80,14 +80,7 @@ const Signin = () => {
          {!userAuthInfo.hasOwnProperty('userId') ? (
             <div>Compte ou mot de passe incorret</div>
          ) : (
-            setItem(
-               'userAuth',
-               JSON.stringify({ ...userAuthInfo })
-            )(
-               <Routes>
-                  <Route path="/" element={<Navigate to="/" replace />} />
-               </Routes>
-            )
+            (setItem('userAuth', JSON.stringify(userAuthInfo)))
          )}
          <form className="form" onSubmit={handleSubmit}>
             <div className="form-container">

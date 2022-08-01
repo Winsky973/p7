@@ -1,6 +1,5 @@
-import React from 'react'
-import { useState } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { useContext, React } from 'react'
+import { Routes, Route, Navigate } from 'react-router-dom'
 
 //Pages
 import Home from './Pages/Home/Home'
@@ -11,15 +10,16 @@ import CreatePost from './Pages/CreatePost'
 import Signin from './Pages/Signin/Signin'
 import Signup from './Pages/Signup/Signup'
 import SinglePost from './Pages/Single-post/SinglePost'
-import { AuthProvider } from './utils/context/Auth/AuthContext'
+import { AuthProvider} from './utils/context/Auth/AuthContext'
+import PrivateRoutes from './utils/PrivateRoutes/PrivateRoutes'
 
 const App = () => {
    return (
-      <BrowserRouter>
-         <div className="main">
-            <AuthProvider>
+      <div className="main">
+         <AuthProvider>
             <Header />
-               <Routes>
+            <Routes>
+               <Route element={<PrivateRoutes />}>
                   <Route path="/" element={<Home />} />
                   <Route path="/modify" element={<UpdatePost />} />
                   <Route path="/modify/:id" element={<UpdatePost />} />
@@ -28,10 +28,10 @@ const App = () => {
                   <Route path="/signin" element={<Signin />} />
                   <Route path="/single-post/:id" element={<SinglePost />} />
                   <Route path="*" element={<Error />} />
-               </Routes>
-            </AuthProvider>
-         </div>
-      </BrowserRouter>
+               </Route>
+            </Routes>
+         </AuthProvider>
+      </div>
    )
 }
 

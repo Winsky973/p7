@@ -1,13 +1,12 @@
-import React from 'react'
+import { React, useContext, ReactDOM } from 'react'
 import PropTypes from 'prop-types'
-import heartLogo from '../../assets/heart.svg'
-import './Card.css'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCoffee } from '@fortawesome/free-solid-svg-icons'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { AuthContext } from '../../utils/context/Auth/AuthContext'
 
-const element = <FontAwesomeIcon icon={faCoffee} />
+import heartLogo from '../../assets/heart.svg'
+import Like from '../Like/Like'
+import './Card.css'
 
 const Card = ({
    picture,
@@ -17,16 +16,28 @@ const Card = ({
    id,
    bool,
    avatar,
-   dislikes,
    userId,
+   usersLiked,
 }) => {
-   const [userAuthLocalStorage, setAuthLocalStorage] = useState(() => {
-      // getting stored value
-      const saved = JSON.parse(localStorage.getItem('userAuth'))
-      return saved || ''
-   })
-   console.log('userAuthLocalStorage : ', userAuthLocalStorage)
-   console.log('userId : ', userId)
+   const [auth, setAuth] = useContext(AuthContext)
+   let [userLiked, setUserLiked] = useState(0)
+   
+
+   function deletePost() {
+      fetch(`http://localhost:3000/api/posts/${id}`, {
+         headers: {
+            Authorization: `bearer ${auth.token}`,
+         },
+         method: 'DELETE',
+         body: JSON.stringify({
+            userId: auth.userId,
+         }),
+      })
+         .then((res) => res.json())
+         .then((data) => console.log(data))
+         .catch((error) => console.log(error))
+   }
+
    return (
       <article className="post">
          {!bool ? (
@@ -50,12 +61,8 @@ const Card = ({
                </div>
                <div className="like-container">
                   <div className="post-likes">
-                     <img src={heartLogo} alt={heartLogo} width="25" />
-                     <span> {likes} </span>
-                  </div>
-                  <div className="post-likes">
-                     <img src={heartLogo} alt={heartLogo} width="25" />
-                     <span> {dislikes} </span>
+                     <Like id={id} usersLiked={usersLiked} />
+                     <span>{likes}</span>
                   </div>
                </div>
             </div>
@@ -74,34 +81,20 @@ const Card = ({
                <div className="post-description">
                   <p> {description} </p>
                </div>
-               <div className="like-container">
+               <div>
                   <div className="post-likes">
-                     <img src={heartLogo} alt={heartLogo} width="25" />
+                     <Like id={id} usersLiked={usersLiked} />
                      <span> {likes} </span>
                   </div>
-                  <div className="post-likes">
-                     <img src={heartLogo} alt={heartLogo} width="25" />
-                     <span> {dislikes} </span>
-                  </div>
                </div>
-               {userId === userAuthLocalStorage.userId ? (
+               {userId === auth.userId ? (
                   <div className="btn-container">
                      <Link className="btn btn--grey" to={`/modify/${id}`}>
                         Modifier
                      </Link>
                      <button
                         className="btn btn--red"
-                        onClick={() => {
-                           fetch(`http://localhost:3000/api/posts/${id}`, {
-                              method: 'DELETE',
-                              body: JSON.stringify({
-                                 userId: userAuthLocalStorage.userId,
-                              }),
-                           })
-                              .then((res) => res.json())
-                              .then((data) => console.log(data))
-                              .catch((error) => console.log(error))
-                        }}
+                        onClick={() => deletePost()}
                      >
                         {' '}
                         Supprimer{' '}
