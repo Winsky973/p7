@@ -23,17 +23,19 @@ a {
 .container {
     display: flex;
     flex-direction: column;
+    row-gap: 1rem;
     align-items: center;
     margin: 0 auto;
     margin-top: 2rem;
     padding: 2.5rem;
     background-color: rgb(255, 215, 215, 20%);
+    width: 60%;
 }
 
 input,
 textarea {
     font-family: "Lato", Helvetica, sans-serif;
-    width: 100%;
+    min-width: 100%;
     height: 1.2rem;
     border: .1rem solid hsla(10, 99%, 50%, 0.369);
     border-radius: .3rem;
@@ -72,4 +74,9 @@ textarea {
 
 .btn--red {
     background-color: #FD2D01;
+}
+
+.form-container {
+    display: grid;
+    grid-gap: 1rem;
 }

@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import logoPrimary from '../../assets/logo-header.webp'
 import { useContext, React} from 'react'
 import { AuthContext } from '../../utils/context/Auth/AuthContext'
@@ -10,17 +10,18 @@ import { useState } from 'react'
 const Header = () => {
    const [auth, setAuth] = useContext(AuthContext)
    const [ isLogged, setIsLogged ] = useState(false)
+   let navigate = useNavigate()
 
    /**get les informations du local storage afin de pouvoir garder la connexion */
 
    function handleLogOut() {
       setAuth('')
       removeItem('userAuth')
+      navigate('/signin')
       window.location.reload()
    }
 
    useEffect(() => {
-      console.log('console')
       if(auth?.userId){
          setIsLogged(true)
       }

@@ -9,11 +9,15 @@ import { setItem } from '../../services/LocalStorage'
 const Signin = ({ history }) => {
    const [userInfo, setuserInfo] = useState({ email: '', password: '' })
    const [errorMessages, setErrorMessages] = useState(false)
-   const [userAuthInfo, setUserAuthInfo] = useState({})
+   const [userAuthInfo, setUserAuthInfo] = useState(true)
    const [isDataLoading, setDataLoading] = useState(true)
    let navigate = useNavigate()
 
    const [auth, setAuth] = useContext(AuthContext)
+
+   useEffect(() => {
+      if(auth) navigate('/')
+   }, [auth, navigate])
 
    //Monitoring for field change
    const handleChange = (event) => {
@@ -22,12 +26,6 @@ const Signin = ({ history }) => {
          [event.target.name]: event.target.value,
       })
    }
-
-   // Generate JSX code for error message
-   const renderErrorMessage = (name) =>
-      name === errorMessages.name && (
-         <div className="error">{errorMessages.message}</div>
-      )
 
    //take infos user when submit
    const handleSubmit = (event) => {
@@ -55,7 +53,7 @@ const Signin = ({ history }) => {
                setUserAuthInfo('')
             } else {
                setErrorMessages(false)
-               setUserAuthInfo(data)
+               setUserAuthInfo(true)
                setItem('userAuth', JSON.stringify(data))
                setAuth(data)
                navigate('/')
@@ -80,7 +78,7 @@ const Signin = ({ history }) => {
             <img src={logo} alt={logo} />
             <p>Connexion</p>
          </div>
-         {!userAuthInfo.hasOwnProperty('userId') ? (
+         {errorMessages ? (
             <div>Compte ou mot de passe incorret</div>
          ) : (null)}
          <form className="form" onSubmit={handleSubmit}>
@@ -94,7 +92,6 @@ const Signin = ({ history }) => {
                      onChange={handleChange}
                      required
                   />
-                  {renderErrorMessage({ userAuthInfo })}
                </label>
 
                <label>
@@ -106,7 +103,6 @@ const Signin = ({ history }) => {
                      onChange={handleChange}
                      required
                   />
-                  {renderErrorMessage('pass')}
                </label>
 
                <button className="btn btn--red" type="submit" value="Envoyer">

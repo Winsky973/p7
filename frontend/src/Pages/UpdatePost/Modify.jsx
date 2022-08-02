@@ -1,14 +1,23 @@
 import { React, useContext } from 'react'
 import { useFetch } from '../../utils/hooks'
 import { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { AuthContext } from '../../utils/context/Auth/AuthContext'
+import { useEffect } from 'react'
 
 const CreatePost = () => {
    /**Si l'image a changé */
    const [imageChange, setImageChange] = useState(false)
    const [imagePicked, setImagePicked] = useState()
    const [auth, setAuth] = useContext(AuthContext)
+   let navigate = useNavigate()
+   
+   console.log(auth)
+   useEffect(() => {
+      if(!auth){
+         navigate('/')
+      }
+   },[auth, navigate])
 
    const urlParams = useParams()
 

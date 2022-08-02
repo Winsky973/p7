@@ -1,14 +1,20 @@
-import { useState, React } from 'react'
+import { useState, React, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './Signup.css'
 import logo from '../../assets/profile.svg'
+import { useContext } from 'react'
+import { AuthContext } from '../../utils/context/Auth/AuthContext'
 
 const Signup = () => {
    const [userInfo, setuserInfo] = useState({ email: '', password: '' })
    const [userAuthStatueCode, setUserAuthStatueCode] = useState()
    const [isDataLoading, setDataLoading] = useState(true)
-
+   const [auth, setAuth] = useContext(AuthContext)
    let navigate = useNavigate()
+
+   useEffect(() => {
+      if (auth) navigate('/')
+   }, [auth, navigate])
 
    //Monitoring for field change
    const handleChange = (event) => {
@@ -16,21 +22,6 @@ const Signup = () => {
          ...userInfo,
          [event.target.name]: event.target.value,
       })
-   }
-
-   function ToggleConnect() {
-      return (
-         <>
-            <div>Comte créer</div>
-            <div>Connectez vous</div>
-            <button
-               className="btn btn--red"
-               onClick={navigate('/signup', { replace: true })}
-            >
-               Connexion
-            </button>
-         </>
-      )
    }
 
    //take infos user when submit
@@ -54,7 +45,9 @@ const Signup = () => {
             )
             const data = await response.json()
             if (response.status === 201) {
+               console.log(data)
                setUserAuthStatueCode(response.status)
+               navigate('/signin')
             }
          } catch (error) {
             console.log(error)
@@ -66,21 +59,20 @@ const Signup = () => {
       event.preventDefault()
    }
 
-   console.log(userAuthStatueCode)
-
    return (
       <div className="container">
          <div className="logo-container">
             <img src={logo} alt={logo} />
             <p>Inscription</p>
          </div>
+
          <form className="form" onSubmit={handleSubmit}>
             <div className="form-container">
                <label>
                   <input
                      type="email"
                      name="email"
-                     placeholder="mail"
+                     placeholder="johndoe@mail.com"
                      required
                      value={userInfo.mail}
                      onChange={handleChange}

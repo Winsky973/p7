@@ -1,10 +1,18 @@
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../../utils/context/Auth/AuthContext'
 
 const CreatePost = () => {
    // state pour le fichier image
    const [message, setMessage] = useState()
    const [auth, setAuth] = useContext(AuthContext)
+
+   let navigate = useNavigate()
+   useEffect(() => {
+      if(!auth){
+         navigate('/')
+      }
+   },[auth, navigate])
 
    // take infos user when submit
    const handleSubmit = (event) => {

@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../utils/context/Auth/AuthContext'
 
-import heartLogo from '../../assets/heart.svg'
 import Like from '../Like/Like'
 import './Card.css'
 
@@ -21,7 +20,6 @@ const Card = ({
 }) => {
    const [auth, setAuth] = useContext(AuthContext)
    let [userLiked, setUserLiked] = useState(0)
-   
 
    function deletePost() {
       fetch(`http://localhost:3000/api/posts/${id}`, {
@@ -38,30 +36,48 @@ const Card = ({
          .catch((error) => console.log(error))
    }
 
+   function CardHearder() {
+      return (
+         <>
+            <div className="post_user">
+               <img src={avatar} alt={avatar} />
+               <p className="">John DOE</p>
+            </div>
+            <p className="post-title"> {title} </p>
+         </>
+      )
+   }
+
+   function CardMain() {
+      return (
+         <>
+            <Link to={`/single-post/${id}`}>
+               <div className="img-post">
+                  <img src={picture} alt={picture} />
+               </div>
+            </Link>
+            <div className="post-description">
+               <p> {description} </p>
+            </div>
+         </>
+      )
+   }
+
    return (
       <article className="post">
          {!bool ? (
             <div>
                <header>
                   <Link to={`/single-post/${id}`}>
-                     <div className="post_user">
-                        <img src={avatar} alt={avatar} />
-                        <p>{title} </p>
-                     </div>
-                     <p className="post-title"> {title} </p>
+                     <CardHearder />
                   </Link>
                </header>
-               <Link to={`/single-post/${id}`}>
-                  <div className="img-post">
-                     <img src={picture} alt={picture} />
-                  </div>
-               </Link>
-               <div className="post-description">
-                  <p> {description} </p>
+               <div>
+                  <CardMain />
                </div>
                <div className="like-container">
                   <div className="post-likes">
-                     <Like id={id} usersLiked={usersLiked} likes={likes}/>
+                     <Like id={id} usersLiked={usersLiked} likes={likes} />
                   </div>
                </div>
             </div>
@@ -85,8 +101,8 @@ const Card = ({
                      <Like id={id} usersLiked={usersLiked} likes={likes} />
                   </div>
                </div>
-               {userId === auth.userId ? (
-                  <div className="btn-container">
+               {userId === auth?.userId || auth.role === 'admin' ? (
+                  <div className="btn-container">  
                      <Link className="btn btn--grey" to={`/modify/${id}`}>
                         Modifier
                      </Link>

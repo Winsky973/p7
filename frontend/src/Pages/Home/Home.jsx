@@ -5,22 +5,35 @@ import Avatar from '../../assets/profile.svg'
 import './Home.css'
 import { getItem } from '../../services/LocalStorage'
 import { AuthContext } from '../../utils/context/Auth/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
-   // const postsData = useFetch(`http://localhost:3000/api/posts`)
-   // console.log('postsData : ', postsData)
    const [data, setData] = useState()
    const [isDataLoading, setIsDataLoading] = useState(true)
    const [auth, setAuth] = useContext(AuthContext)
+   let navigate = useNavigate()
 
    useEffect(() => {
-      fetch(`http://localhost:3000/api/posts`)
-         .then((response) => response.json())
-         .then((data) => {
-            setData(data)
-            setIsDataLoading(false)
+      if (!auth) {
+         navigate('/signin')
+      }
+   }, [auth, navigate])
+
+   useEffect(() => {
+      if (auth) {
+         fetch(`http://localhost:3000/api/posts`, {
+            headers: {
+               Authorization: `bearer ${auth?.token}`,
+            },
+            method: 'GET',
          })
-         .catch((error) => console.log(error))
+            .then((response) => response.json())
+            .then((data) => {
+               setData(data)
+               setIsDataLoading(false)
+            })
+            .catch((error) => console.log(error))
+      }
    }, [auth])
 
    return (

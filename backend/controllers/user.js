@@ -22,6 +22,7 @@ exports.signup = (req, res, next) => {
 exports.login = (req, res, next) => {
     User.findOne({ email: req.body.email })
         .then(user => {
+            console.log('user : ', user)
             if (!user) {
                 return res.status(401).json({ message: 'Compte ou utilisateur incorrect' });
             }
@@ -35,6 +36,7 @@ exports.login = (req, res, next) => {
                             process.env.SECRETKEY, { expiresIn: '24h' }
                         ),
                         userId: user._id,
+                        role: user.role
                     });
                 })
                 .catch(error => res.status(500).json({ error }));

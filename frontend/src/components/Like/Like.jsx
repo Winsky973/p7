@@ -4,14 +4,14 @@ import { faHeart as faFasHeart } from '@fortawesome/free-solid-svg-icons'
 import { faHeart as faFarHeart } from '@fortawesome/free-regular-svg-icons'
 import { AuthContext } from '../../utils/context/Auth/AuthContext'
 import './Like.css'
-import { useFetch } from '../../utils/hooks'
+import { useNavigate } from 'react-router-dom'
 
 const Like = ({ id, usersLiked, likes }) => {
    const [nbLike, setNbLike] = useState(0)
    const [newLike, setNewLike] = useState(false)
    const [auth, setAuth] = useContext(AuthContext)
 
-   // let buffer = { userId: auth.userId, like }
+   let navigate = useNavigate()
 
    const foundUserLiked = usersLiked.findIndex((element) => {
       return element === auth?.userId
@@ -25,7 +25,7 @@ const Like = ({ id, usersLiked, likes }) => {
 
    useEffect(() => {
       setNbLike(likes)
-   }, [])
+   }, [likes])
 
    function UserLiked() {
       if (newLike || foundUserLiked !== -1) {
@@ -34,7 +34,11 @@ const Like = ({ id, usersLiked, likes }) => {
                <FontAwesomeIcon
                   icon={faFasHeart}
                   className="faHeart faHeart--red"
-                  onClick={() => sendLike(0, auth.userId)}
+                  onClick={() => {
+                     auth
+                        ? sendLike(1, auth.userId)
+                        : alert('Vous devez être connectez pour aimer ce post')
+                  }}
                />
                <span> {nbLike} </span>
             </div>
@@ -46,7 +50,11 @@ const Like = ({ id, usersLiked, likes }) => {
                   icon={faFarHeart}
                   className="faHeart faHeart--black"
                   size="1x"
-                  onClick={() => sendLike(1, auth.userId)}
+                  onClick={() => {
+                     auth
+                        ? sendLike(1, auth.userId)
+                        : alert('Vous devez être connecter pour aimer ce post')
+                  }}
                />
                <span> {nbLike} </span>
             </div>

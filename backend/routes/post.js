@@ -17,8 +17,8 @@ router.put('/:id', auth, multer, postCtrl.modifyPost);
 /**Delete one */
 router.delete('/:id', auth, postCtrl.deletePost);
 /**Get one */
-router.get('/:id', /*auth,*/ postCtrl.getOnePost);
+router.get('/:id', auth, postCtrl.getOnePost);
 /**Get all */
-router.get('/', /*auth,*/ postCtrl.getAllPosts);
+router.get('/', auth, postCtrl.getAllPosts);
 
 module.exports = router;
