@@ -1,7 +1,7 @@
 import { React, useContext, ReactDOM } from 'react'
 import PropTypes from 'prop-types'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { AuthContext } from '../../utils/context/Auth/AuthContext'
 
 import Like from '../Like/Like'
@@ -17,9 +17,11 @@ const Card = ({
    avatar,
    userId,
    usersLiked,
+   name
 }) => {
    const [auth, setAuth] = useContext(AuthContext)
    let [userLiked, setUserLiked] = useState(0)
+   let naigate = useNavigate()
 
    function deletePost() {
       fetch(`http://localhost:3000/api/posts/${id}`, {
@@ -31,7 +33,7 @@ const Card = ({
             userId: auth.userId,
          }),
       })
-         .then((res) => res.json())
+         .then((res) => {res.json(); naigate('/')})
          .then((data) => console.log(data))
          .catch((error) => console.log(error))
    }
@@ -41,7 +43,7 @@ const Card = ({
          <>
             <div className="post_user">
                <img src={avatar} alt={avatar} />
-               <p className="">John DOE</p>
+               <p className="">{name || 'John DOE'}</p>
             </div>
             <p className="post-title"> {title} </p>
          </>

@@ -22,7 +22,6 @@ exports.signup = (req, res, next) => {
 exports.login = (req, res, next) => {
     User.findOne({ email: req.body.email })
         .then(user => {
-            console.log('user : ', user)
             if (!user) {
                 return res.status(401).json({ message: 'Compte ou utilisateur incorrect' });
             }
@@ -32,7 +31,7 @@ exports.login = (req, res, next) => {
                         return res.status(401).json({ message: 'Compte ou utilisateur incorrect' });
                     }
                     res.status(200).json({
-                        token: jwt.sign({ userId: user._id },
+                        token: jwt.sign({ userId: user._id, role: user.role },
                             process.env.SECRETKEY, { expiresIn: '24h' }
                         ),
                         userId: user._id,

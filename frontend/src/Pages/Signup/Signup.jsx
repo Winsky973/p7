@@ -67,7 +67,7 @@ const Signup = () => {
          </div>
 
          <form className="form" onSubmit={handleSubmit}>
-            <div className="form-container">
+            <div className="form-input">
                <label>
                   <input
                      type="email"

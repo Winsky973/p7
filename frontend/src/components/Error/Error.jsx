@@ -14,7 +14,7 @@ const Error = () => {
          </div>
 
          <div className="btn-container">
-            <Link className="btn" to={'/'}>
+            <Link className="btn btn--grey" to={'/'}>
                Accueil
             </Link>
          </div>

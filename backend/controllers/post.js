@@ -15,6 +15,9 @@ exports.createPost = (req, res, next) => {
 /**Update one */
 exports.modifyPost = (req, res, next) => {
 
+    console.log('req.body : ', req.body)
+        // console.log('req.headers : ', req.headers.authorization)
+
     const postObject = req.file ? {
         ...JSON.parse(req.body.post),
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
@@ -25,7 +28,6 @@ exports.modifyPost = (req, res, next) => {
     Posts.findOne({ _id: req.params.id })
         .then((post) => {
             if (req.file) {
-                console.log('Il existe un file')
                 const filename = post.imageUrl.split('/images/')[1];
                 fs.unlink(`images/${filename}`, function(error) {
                     if (error) return error;
@@ -39,15 +41,15 @@ exports.modifyPost = (req, res, next) => {
                 })
             }
 
-            if (post.userId !== req.auth.userId) {
+            if (post.userId === req.auth.userId || req.auth.userRole === 'admin') {
+                Posts.updateOne({ _id: req.params.id }, {...postObject, _id: req.params.id })
+                    .then(() => res.status(200).json({ message: 'objet modifié' }))
+                    .catch(error => res.status(400).json({ error }));
+            } else {
                 res.status(401).json({
                     error: new Error('Requête non autorisée')
                 });
             }
-            Posts.updateOne({ _id: req.params.id }, {...postObject, _id: req.params.id })
-                .then(() => res.status(200).json({ message: 'objet modifié' }))
-                .catch(error => res.status(400).json({ error }));
-
         })
         .catch((error) => { res.status(400).json({ error: error }) });
 };
@@ -61,18 +63,20 @@ exports.deletePost = (req, res, next) => {
                 })
             }
 
-            if (post.userId !== req.auth.userId) {
+            if (post.userId === req.auth.userId || req.auth.userRole === 'admin') {
+                const filename = post.imageUrl.split('/images/')[1];
+                fs.unlink(`images/${filename}`, () => {
+                    Posts.deleteOne({ _id: req.params.id })
+                        .then(() => res.status(200).json({ message: 'Objet supprimé' }))
+                        .catch(error => res.status(400).json({ error }));
+                });
+            } else {
+
                 res.status(401).json({
                     error: new Error('Requête non autorisée')
                 });
             }
-            const filename = post.imageUrl.split('/images/')[1];
 
-            fs.unlink(`images/${filename}`, () => {
-                Posts.deleteOne({ _id: req.params.id })
-                    .then(() => res.status(200).json({ message: 'Objet supprimé' }))
-                    .catch(error => res.status(400).json({ error }));
-            });
 
         })
         .catch((error) => { res.status(400).json({ error: error }) });
@@ -89,7 +93,10 @@ exports.getOnePost = (req, res, next) => {
 /**get all posts */
 exports.getAllPosts = (req, res, next) => {
     Posts.find()
-        .then(posts => res.status(200).json(posts))
+        .then(posts => {
+            posts.reverse();
+            res.status(200).json(posts)
+        })
         .catch(error => res.status(400).json({ error }));
 };
 

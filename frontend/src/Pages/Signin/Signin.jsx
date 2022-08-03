@@ -82,7 +82,7 @@ const Signin = ({ history }) => {
             <div>Compte ou mot de passe incorret</div>
          ) : (null)}
          <form className="form" onSubmit={handleSubmit}>
-            <div className="form-container">
+            <div className="form-input">
                <label>
                   <input
                      type="email"

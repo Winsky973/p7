@@ -7,6 +7,7 @@ import App from './App'
 // Context
 
 import './index.css'
+import './utils/styles/normalize.css'
 const root = ReactDOM.createRoot(document.getElementById('root'))
 
 root.render(

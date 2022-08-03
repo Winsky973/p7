@@ -1,11 +1,17 @@
-.faHeart {
-    cursor: pointer;
-}
-
 .faHeart--red {
     color: red;
 }
 
 .faHeart--black {
     color: black;
+}
+
+.likeButton {
+    cursor: pointer;
+    appearance: none;
+    padding: .25rem .5rem;
+    background-color: #ebdcdc;
+    border: 1px solid rgb(94, 98, 98);
+    border-radius: 3px;
+    font-family: monospace;
 }

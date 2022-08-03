@@ -21,6 +21,7 @@ const CreatePost = () => {
       /**capte les données rentrées par  l'utilisateur */
       const postTitle = document.getElementById('post-title').value
       const postDescription = document.getElementById('post-description').value
+      const postName= document.getElementById('post-name').value
       const postImage = document.getElementById('post-image')
 
       const formData = new FormData()
@@ -29,6 +30,7 @@ const CreatePost = () => {
          JSON.stringify({
             description: postDescription,
             title: postTitle,
+            name: postName,
             userId: auth.userId,
          })
       )
@@ -41,7 +43,7 @@ const CreatePost = () => {
          method: 'POST',
          body: formData,
       })
-         .then((res) => res.json())
+         .then((res) => {if(res.ok) navigate('/')})
          .then((data) => setMessage(data))
          .catch((error) => console.log(error))
    }
@@ -49,13 +51,22 @@ const CreatePost = () => {
    return (
       <div className="container">
          <form className="form" onSubmit={handleSubmit}>
-            <div className="form-container">
+            <div className="form-input">
                <label>
                   <input
                      id="post-title"
                      type="text"
                      name="title"
                      placeholder="Titre"
+                     required
+                  />
+               </label>
+               <label>
+                  <input
+                     id="post-name"
+                     type="text"
+                     name="nom"
+                     placeholder="nom"
                      required
                   />
                </label>

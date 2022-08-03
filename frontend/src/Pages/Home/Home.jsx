@@ -50,6 +50,7 @@ const Home = () => {
                   likes={post.likes}
                   bool={false}
                   usersLiked={post.usersLiked}
+                  name={post.name}
                />
             ))
          ) : (
