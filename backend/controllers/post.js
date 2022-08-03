@@ -27,18 +27,18 @@ exports.modifyPost = (req, res, next) => {
 
     Posts.findOne({ _id: req.params.id })
         .then((post) => {
+            if (!post) {
+                return res.status(404).json({
+                    error: new Error('aucun objet trouvé')
+                })
+            }
+
             if (req.file) {
                 const filename = post.imageUrl.split('/images/')[1];
                 fs.unlink(`images/${filename}`, function(error) {
                     if (error) return error;
                     console.log('image delete');
                 });
-            }
-
-            if (!post) {
-                res.status(404).json({
-                    error: new Error('aucun objet trouvé')
-                })
             }
 
             if (post.userId === req.auth.userId || req.auth.userRole === 'admin') {
